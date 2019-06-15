@@ -4,15 +4,15 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.setname.githubusergrabber.R
 import com.setname.githubusergrabber.entities.repository.User
+import com.setname.githubusergrabber.ui.search.AdapterDisplaySearchClickListener
 
-class SearchDisplayAdapter(val list: List<User>) : RecyclerView.Adapter<SearchDisplayAdapter.ViewHolder>() {
+class SearchDisplayAdapter(private val list: List<User>, private val onDisplaySearchClickListener: AdapterDisplaySearchClickListener) :
+    RecyclerView.Adapter<SearchDisplayAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, pos: Int): ViewHolder =
         ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.model_rv_display_search, parent, false))
@@ -23,34 +23,36 @@ class SearchDisplayAdapter(val list: List<User>) : RecyclerView.Adapter<SearchDi
 
     }
 
-
     override fun getItemCount(): Int = list.size
 
-    inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-
-        @BindView(R.id.model_rv_display_search_iv_user)
-        lateinit var userImage:ImageView
-
-        @BindView(R.id.model_rv_display_search_tv_username)
-        lateinit var userName:TextView
+    inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
         init {
-            ButterKnife.bind(this, view)
+            view.setOnClickListener(this)
         }
 
-        fun setData(user: User){
+        override fun onClick(v: View?) {
+
+          onDisplaySearchClickListener.navigateToFullUserInformation(adapterPosition)
+
+        }
+
+        fun setData(user: User) {
 
             setName(user.login)
-            setImage(user.image)
+            setImage(user.avatar_url)
 
         }
 
-        private fun setName(name:String){
-            userName.text = name
+        private fun setName(name: String) {
+            view.findViewById<TextView>(R.id.model_rv_display_search__tv_username).text = name
         }
 
-        private fun setImage(url:String){
-            Glide.with(view).load(url).into(userImage)
+        private fun setImage(url: String) {
+            Glide.with(view)
+                .load(url)
+                .apply(RequestOptions.circleCropTransform())
+                .into(view.findViewById(R.id.model_rv_display_search__iv_user))
         }
 
     }

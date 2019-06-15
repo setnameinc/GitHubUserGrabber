@@ -3,7 +3,7 @@ package com.setname.githubusergrabber.di
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.setname.githubusergrabber.contants.RemoteModuleUtils
-import com.setname.githubusergrabber.services.RepositoryService
+import com.setname.githubusergrabber.dao.RepositoryDao
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -29,5 +29,5 @@ class RemoteModule {
 
     @Provides
     @Singleton
-    fun provideGeneralServices(retrofit: Retrofit): RepositoryService = retrofit.create(RepositoryService::class.java)
+    fun provideGeneralServices(retrofit: Retrofit): RepositoryDao = retrofit.create(RepositoryDao::class.java)
 }

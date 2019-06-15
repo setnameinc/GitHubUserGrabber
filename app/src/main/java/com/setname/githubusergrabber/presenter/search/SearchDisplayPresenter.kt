@@ -1,22 +1,48 @@
 package com.setname.githubusergrabber.presenter.search
 
-import android.util.Log
+import com.setname.githubusergrabber.dao.DatabaseDao
+import com.setname.githubusergrabber.dao.RepositoryDao
 import com.setname.githubusergrabber.entities.repository.ModelResponse
-import com.setname.githubusergrabber.services.RepositoryService
+import com.setname.githubusergrabber.entities.repository.User
+import com.setname.githubusergrabber.mappers.FavouriteMapper
+import com.setname.githubusergrabber.mappers.UserMapper
 import com.setname.githubusergrabber.ui.search.SearchDisplayFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class SearchDisplayPresenter(val view: SearchDisplayFragment) {
+class SearchDisplayPresenter @Inject constructor() {
 
     @Inject
-    lateinit var retrofitService: RepositoryService
+    lateinit var retrofitDao: RepositoryDao
 
-    fun getUserListByLogin(login: String) {
+    @Inject
+    lateinit var userMapper: UserMapper
+
+    @Inject
+    lateinit var currentOpenedUser: User
+
+    @Inject
+    lateinit var currentUser: User
+
+    @Inject
+    lateinit var databaseDao: DatabaseDao
+
+    @Inject
+    lateinit var favouriteMapper: FavouriteMapper
+
+    private lateinit var view: SearchDisplayFragment
+
+    fun init(view: SearchDisplayFragment) {
+        this.view = view
+    }
+
+    fun loadListOfUsersByLogin(login: String) {
+
+        view.showProgressBar()
 
         val dispatcher =
-            retrofitService.getPage(login)
+            retrofitDao.getPage(login)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::onModelResponseFetched, this::onError)
@@ -24,11 +50,27 @@ class SearchDisplayPresenter(val view: SearchDisplayFragment) {
     }
 
     private fun onModelResponseFetched(modelResponse: ModelResponse) {
-        Log.i("MainTest", "count = ${modelResponse.items[0].login}")
+        view.loadListOfUsers(userMapper.convertTo(modelResponse))
+        view.hideProgressBar()
     }
 
     private fun onError(throwable: Throwable) {
-        Log.d("MainTest", throwable.message)
+        view.showErrorMessage(throwable.message!!)
+        view.hideProgressBar()
+    }
+
+    fun loadFavouriteUsers() {
+
+        view.loadListOfUsers(databaseDao.getAllFavourite().map { favouriteMapper.convertTo(it) })
+        view.hideProgressBar()
+
+    }
+
+    fun loadCurrentUser(user: User) {
+        currentUser.login = user.login
+        currentUser.avatar_url = user.avatar_url
+        currentUser.repos_url = user.repos_url
+        currentUser.id = user.id
     }
 
 }
