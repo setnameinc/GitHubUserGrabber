@@ -1,5 +1,6 @@
 package com.setname.githubusergrabber.ui.user
 
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -60,8 +61,8 @@ class DisplayUserFragment : Fragment(), DisplayUserFragmentView {
 
     private fun initUpperBlock(isFavouriteExist: Boolean) {
 
-        val selected = ContextCompat.getDrawable(context!!, R.drawable.ic_star_selected)
-        val notSelected = ContextCompat.getDrawable(context!!, R.drawable.ic_star_not_selected)
+        val selected = ContextCompat.getDrawable(context!!, R.drawable.ic_star_not_select_to_selected)
+        val notSelected = ContextCompat.getDrawable(context!!, R.drawable.ic_star_selected_to_not_selected)
 
         if (isFavouriteExist) {
 
@@ -89,8 +90,9 @@ class DisplayUserFragment : Fragment(), DisplayUserFragmentView {
 
             }
 
-            fragment_display_user__btn_favourite.isClickable = true
+            ((fragment_display_user__btn_favourite.drawable) as AnimatedVectorDrawable).start()
 
+            fragment_display_user__btn_favourite.isClickable = true
 
         }
 
