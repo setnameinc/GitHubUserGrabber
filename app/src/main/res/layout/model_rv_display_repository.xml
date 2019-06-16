@@ -13,7 +13,7 @@
         android:fontFamily="@font/lato_bold"
         android:textColor="#3C42B1"
         android:text="username"
-        android:textSize="20sp"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,7 +26,7 @@
         android:layout_marginEnd="24dp"
         android:fontFamily="@font/lato"
         android:text="description"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/model_rv_display_repository__tv_username" />
@@ -42,7 +42,7 @@
         android:fontFamily="@font/lato"
         android:gravity="start"
         android:text="language"
-        android:textSize="20sp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

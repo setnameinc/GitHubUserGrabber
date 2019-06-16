@@ -82,6 +82,7 @@ class SearchDisplayFragmentImpl : Fragment(), SearchDisplayFragment {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        Log.i("MainTest1", "onViewCreated, is exist ${savedInstanceState == null}")
         val view = inflater.inflate(R.layout.fragment_display_search, container, false)
         searchField = view.findViewById(R.id.view_search_view__et_search)
         // the view_search_view_et_search isn't works correctly(lateinit Exception), so must use the searchField var
@@ -90,6 +91,8 @@ class SearchDisplayFragmentImpl : Fragment(), SearchDisplayFragment {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Log.i("MainTest1", "onViewCreated, is exist ${savedInstanceState == null}")
 
         initPresenter()
         initSearchListener()

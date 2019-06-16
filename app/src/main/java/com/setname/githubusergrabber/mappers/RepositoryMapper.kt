@@ -14,8 +14,8 @@ class RepositoryMapperImpl : RepositoryMapper {
                 modelRepositoryRepository.owner.id,
                 Repository(
                     modelRepositoryRepository.name,
-                    modelRepositoryRepository.description ?: "",
-                    modelRepositoryRepository.language ?: ""
+                    modelRepositoryRepository.description ?: "Empty description",
+                    modelRepositoryRepository.language ?: "No language selected"
                 )
             )
         }
@@ -31,8 +31,8 @@ class RepositoryMapperImpl : RepositoryMapper {
 
             return Repository(
                 modelRepositoryRepository.name,
-                modelRepositoryRepository.description ?: "",
-                modelRepositoryRepository.language ?: ""
+                modelRepositoryRepository.description ?: "Empty description",
+                modelRepositoryRepository.language ?: "No language selected"
             )
 
         }
