@@ -13,6 +13,8 @@ import javax.inject.Singleton
 class NavigatonModule {
 
     private val firstLevelNavigation = Cicerone.create()
+    private val secondLevelNavigation = Cicerone.create()
+
 
     @Provides
     @Singleton
@@ -21,7 +23,17 @@ class NavigatonModule {
 
     @Provides
     @Singleton
+    @Named(Navigation.ROUTER_SECOND_LEVEL)
+    fun provideSecondLevelRouter() = secondLevelNavigation.router
+
+    @Provides
+    @Singleton
     @Named(Navigation.NAVIGATION_HOLDER_FIRST_LEVEL)
     fun provideFirstLevelNavigationHolder() = firstLevelNavigation.navigatorHolder
+
+    @Provides
+    @Singleton
+    @Named(Navigation.NAV_HOLDER_SECOND_LEVEL)
+    fun provideSecondLevelNavigationHolder() = secondLevelNavigation.navigatorHolder
 
 }

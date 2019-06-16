@@ -1,9 +1,6 @@
 package com.setname.githubusergrabber.di
 
-import com.setname.githubusergrabber.mappers.FavouriteMapper
-import com.setname.githubusergrabber.mappers.FavouriteMapperImpl
-import com.setname.githubusergrabber.mappers.UserMapper
-import com.setname.githubusergrabber.mappers.UserMapperImpl
+import com.setname.githubusergrabber.mappers.*
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -18,5 +15,9 @@ class MappersModule {
     @Provides
     @Singleton
     fun provideFavouriteMapper(): FavouriteMapper = FavouriteMapperImpl()
+
+    @Provides
+    @Singleton
+    fun provideRepositoryMapperImpl():RepositoryMapper = RepositoryMapperImpl()
 
 }

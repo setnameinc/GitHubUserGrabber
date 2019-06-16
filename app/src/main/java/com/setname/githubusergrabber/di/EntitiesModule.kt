@@ -1,5 +1,6 @@
 package com.setname.githubusergrabber.di
 
+import com.setname.githubusergrabber.entities.cache.ModelRepositoryCache
 import com.setname.githubusergrabber.entities.repository.User
 import dagger.Module
 import dagger.Provides
@@ -15,5 +16,9 @@ class EntitiesModule {
     @Provides
     @Singleton
     fun provideCurrentOpenedUser(): User = User()
+
+    @Provides
+    @Singleton
+    fun provideRepositoriesList(): MutableList<ModelRepositoryCache> = arrayListOf()
 
 }

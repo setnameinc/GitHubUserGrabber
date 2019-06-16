@@ -1,14 +1,13 @@
 package com.setname.githubusergrabber.mappers
 
 import com.setname.githubusergrabber.entities.cache.ModelFavourite
-import com.setname.githubusergrabber.entities.cache.ModelUserDatabase
-import com.setname.githubusergrabber.entities.repository.ModelResponse
+import com.setname.githubusergrabber.entities.repository.ModelUserResponse
 import com.setname.githubusergrabber.entities.repository.User
 
 
 class UserMapperImpl : UserMapper {
 
-    override fun convertTo(modelResponse: ModelResponse): List<User> = modelResponse.items
+    override fun convertTo(modelUserResponse: ModelUserResponse): List<User> = modelUserResponse.items
 
     override fun convertFrom(modelUserDatabase: ModelFavourite): User = User(
         modelUserDatabase.user.login,
@@ -21,7 +20,7 @@ class UserMapperImpl : UserMapper {
 
 interface UserMapper {
 
-    fun convertTo(modelResponse: ModelResponse): List<User>
+    fun convertTo(modelUserResponse: ModelUserResponse): List<User>
 
     fun convertFrom(modelUserDatabase: ModelFavourite): User
 

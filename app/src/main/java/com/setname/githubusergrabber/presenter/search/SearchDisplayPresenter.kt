@@ -2,7 +2,7 @@ package com.setname.githubusergrabber.presenter.search
 
 import com.setname.githubusergrabber.dao.DatabaseDao
 import com.setname.githubusergrabber.dao.RepositoryDao
-import com.setname.githubusergrabber.entities.repository.ModelResponse
+import com.setname.githubusergrabber.entities.repository.ModelUserResponse
 import com.setname.githubusergrabber.entities.repository.User
 import com.setname.githubusergrabber.mappers.FavouriteMapper
 import com.setname.githubusergrabber.mappers.UserMapper
@@ -42,35 +42,40 @@ class SearchDisplayPresenter @Inject constructor() {
         view.showProgressBar()
 
         val dispatcher =
-            retrofitDao.getPage(login)
+            retrofitDao.getUser(login)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::onModelResponseFetched, this::onError)
 
     }
 
-    private fun onModelResponseFetched(modelResponse: ModelResponse) {
-        view.loadListOfUsers(userMapper.convertTo(modelResponse))
-        view.hideProgressBar()
+    private fun onModelResponseFetched(modelUserResponse: ModelUserResponse) {
+
+        view.loadListOfUsers(userMapper.convertTo(modelUserResponse))
+
     }
 
     private fun onError(throwable: Throwable) {
+
         view.showErrorMessage(throwable.message!!)
         view.hideProgressBar()
+
     }
 
     fun loadFavouriteUsers() {
 
-        view.loadListOfUsers(databaseDao.getAllFavourite().map { favouriteMapper.convertTo(it) })
+        view.loadListOfUsers(databaseDao.getAllFavourites().map { favouriteMapper.convertTo(it) })
         view.hideProgressBar()
 
     }
 
     fun loadCurrentUser(user: User) {
+
         currentUser.login = user.login
         currentUser.avatar_url = user.avatar_url
         currentUser.repos_url = user.repos_url
         currentUser.id = user.id
+
     }
 
 }

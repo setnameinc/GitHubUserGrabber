@@ -3,7 +3,9 @@ package com.setname.githubusergrabber.ui.search
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentTransaction
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +22,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_display_search.*
 import kotlinx.android.synthetic.main.view_search_view.*
+import ru.terrakok.cicerone.Navigator
+import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
+import ru.terrakok.cicerone.android.support.SupportAppNavigator
+import ru.terrakok.cicerone.commands.Command
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
@@ -28,22 +34,51 @@ import javax.inject.Named
 class SearchDisplayFragmentImpl : Fragment(), SearchDisplayFragment {
 
     @Inject
-    @field:Named(Navigation.ROUTER_FIRST_LEVEL)
-    lateinit var router: Router
-
-    @Inject
     lateinit var presenter: SearchDisplayPresenter
 
     @Inject
-    lateinit var list: MutableList<User>
+    @field:Named(Navigation.ROUTER_SECOND_LEVEL)
+    lateinit var router: Router
 
+    @Inject
+    @field:Named(Navigation.NAV_HOLDER_SECOND_LEVEL)
+    lateinit var navigatorHolder: NavigatorHolder
+
+    private lateinit var navigator: Navigator
+
+    private var list: MutableList<User> = arrayListOf()
     private lateinit var adapter: SearchDisplayAdapter
 
     private lateinit var searchField: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        App.appComponent.inject(this)
+
+        initInjection()
+        initNavigator()
+
         super.onCreate(savedInstanceState)
+    }
+
+    private fun initInjection() {
+        App.appComponent.inject(this)
+    }
+
+    private fun initNavigator() {
+        navigator = object : SupportAppNavigator(activity, R.id.main_container) {
+            override fun setupFragmentTransaction(
+                command: Command?,
+                currentFragment: Fragment?,
+                nextFragment: Fragment?,
+                fragmentTransaction: FragmentTransaction?
+            ) {
+                fragmentTransaction?.setCustomAnimations(
+                    R.anim.fragment_enter_anim,
+                    R.anim.fragment_exit_anim,
+                    R.anim.fragment_pop_enter_anim,
+                    R.anim.fragment_pop_exit_anim
+                )
+            }
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -135,6 +170,9 @@ class SearchDisplayFragmentImpl : Fragment(), SearchDisplayFragment {
             object : AdapterDisplaySearchClickListener {
 
                 override fun navigateToFullUserInformation(pos: Int) {
+
+                    Log.i("MainTest", "clicked")
+
                     presenter.loadCurrentUser(list[pos])
                     router.navigateTo(Screens.DisplayUserFragmentScreen())
                 }
@@ -164,8 +202,20 @@ class SearchDisplayFragmentImpl : Fragment(), SearchDisplayFragment {
 
     }
 
-    private fun showFavouriteList(){
+    private fun showFavouriteList() {
+
         presenter.loadFavouriteUsers()
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        navigatorHolder.setNavigator(navigator)
+    }
+
+    override fun onPause() {
+        navigatorHolder.removeNavigator()
+        super.onPause()
     }
 
 }

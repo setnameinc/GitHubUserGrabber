@@ -44,21 +44,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initNavigator() {
-        navigator = object : SupportAppNavigator(this, R.id.main_container) {
-            override fun setupFragmentTransaction(
-                command: Command?,
-                currentFragment: Fragment?,
-                nextFragment: Fragment?,
-                fragmentTransaction: FragmentTransaction?
-            ) {
-                fragmentTransaction?.setCustomAnimations(
-                    R.anim.fragment_enter_anim,
-                    R.anim.fragment_exit_anim,
-                    R.anim.fragment_pop_enter_anim,
-                    R.anim.fragment_pop_exit_anim
-                )
-            }
-        }
+        navigator = SupportAppNavigator(this, R.id.main_container)
     }
 
     override fun onStart() {
