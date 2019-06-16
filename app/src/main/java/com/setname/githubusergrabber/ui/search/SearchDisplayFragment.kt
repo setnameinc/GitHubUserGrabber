@@ -2,7 +2,9 @@ package com.setname.githubusergrabber.ui.search
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.AnimatedVectorDrawable
+import android.net.NetworkInfo
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.ContextCompat
@@ -16,6 +18,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import com.setname.githubusergrabber.App
 import com.setname.githubusergrabber.R
 import com.setname.githubusergrabber.adapters.SearchDisplayAdapter
@@ -120,11 +123,37 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
             initSearchListener()
             initRecyclerView()
 
+            initNetworkListener()
+
             showFavouriteList()
 
             onViewCreated = false
 
         }
+
+    }
+
+    @SuppressLint("CheckResult")
+    private fun initNetworkListener() {
+
+        ReactiveNetwork.observeNetworkConnectivity(context?.applicationContext)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { connectivity ->
+                run {
+
+                    if (connectivity.state() == NetworkInfo.State.DISCONNECTED) {
+
+                        showErrorView("no internet connection")
+
+                    } else if (connectivity.state() == NetworkInfo.State.CONNECTED) {
+
+                        hideErrorView()
+
+                    }
+
+                }
+            }
 
     }
 
@@ -257,7 +286,10 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
 
     override fun hideErrorView() {
 
-        errorView.visibility = View.GONE
+        errorView.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_error_end))
+        ((errorView.drawable) as AnimatedVectorDrawable).start()
+
+        Handler().postDelayed({ errorView.visibility = View.GONE }, 500L) //too lazy to think about the right solution
 
         onErrorState = false
 
