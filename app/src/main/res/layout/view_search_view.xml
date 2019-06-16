@@ -21,10 +21,8 @@
         android:id="@+id/view_search_view__et_search"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
         android:background="@android:color/transparent"
         android:fontFamily="@font/lato"
         android:hint="Input here..."
@@ -32,10 +30,21 @@
         android:singleLine="true"
         android:textColor="#424242"
         android:textColorHint="#757575"
-        android:textSize="16sp"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/view_search_view__pb"
+        app:layout_constraintStart_toEndOf="@+id/view_search_view__icon_search"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/view_search_view__pb"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginEnd="16dp"
+        android:indeterminateTint="#3C42B1"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/view_search_view__icon_search"
         app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

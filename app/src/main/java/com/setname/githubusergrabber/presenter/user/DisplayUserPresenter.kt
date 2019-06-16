@@ -26,10 +26,9 @@ class DisplayUserPresenter @Inject constructor() {
     @Inject
     lateinit var repositoryMapper: RepositoryMapper
 
-    @Inject
-    lateinit var listOfRepositoryRepositories: MutableList<ModelRepositoryCache>
-
     private lateinit var view: DisplayUserFragment
+
+    var listOfRepositoryRepositories: MutableList<ModelRepositoryCache> = arrayListOf()
 
     fun init(displayUserFragment: DisplayUserFragment) {
         view = displayUserFragment

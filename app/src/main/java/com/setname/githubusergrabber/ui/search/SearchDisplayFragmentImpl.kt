@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.widget.LinearLayoutManager
+import android.transition.Visibility
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -30,6 +31,7 @@ import ru.terrakok.cicerone.commands.Command
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
+import javax.inject.Singleton
 
 class SearchDisplayFragmentImpl : Fragment(), SearchDisplayFragment {
 
@@ -43,6 +45,10 @@ class SearchDisplayFragmentImpl : Fragment(), SearchDisplayFragment {
     @Inject
     @field:Named(Navigation.NAV_HOLDER_SECOND_LEVEL)
     lateinit var navigatorHolder: NavigatorHolder
+
+    private lateinit var localeView: View //temporary solution for save state
+    var onCreateView = true //temporary solution for save state
+    var onViewCreated = true //temporary solution for save state
 
     private lateinit var navigator: Navigator
 
@@ -82,23 +88,34 @@ class SearchDisplayFragmentImpl : Fragment(), SearchDisplayFragment {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Log.i("MainTest1", "onViewCreated, is exist ${savedInstanceState == null}")
-        val view = inflater.inflate(R.layout.fragment_display_search, container, false)
-        searchField = view.findViewById(R.id.view_search_view__et_search)
-        // the view_search_view_et_search isn't works correctly(lateinit Exception), so must use the searchField var
-        return view
+
+        if (onCreateView) {
+            localeView = inflater.inflate(R.layout.fragment_display_search, container, false)
+
+            searchField = localeView.findViewById(R.id.view_search_view__et_search)
+            // the view_search_view_et_search isn't works correctly(lateinit Exception), so must use the searchField var
+
+            onCreateView = false
+        }
+
+        return localeView
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.i("MainTest1", "onViewCreated, is exist ${savedInstanceState == null}")
+        if (onViewCreated) {
 
-        initPresenter()
-        initSearchListener()
-        initRecyclerView()
+            initPresenter()
+            initSearchListener()
+            initRecyclerView()
 
-        showFavouriteList()
+            showFavouriteList()
+
+            onViewCreated = false
+
+        }
 
     }
 
@@ -109,11 +126,11 @@ class SearchDisplayFragmentImpl : Fragment(), SearchDisplayFragment {
     }
 
     override fun showProgressBar() {
-
+        view_search_view__pb.visibility = View.VISIBLE
     }
 
     override fun hideProgressBar() {
-
+        view_search_view__pb.visibility = View.INVISIBLE
     }
 
     override fun showErrorMessage(message: String) {
@@ -127,7 +144,6 @@ class SearchDisplayFragmentImpl : Fragment(), SearchDisplayFragment {
     @SuppressLint("CheckResult")
     private fun initSearchListener() {
 
-
         val rxSearchObservable = RxSearchObservable()
 
         rxSearchObservable
@@ -136,6 +152,9 @@ class SearchDisplayFragmentImpl : Fragment(), SearchDisplayFragment {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
+
+                showProgressBar()
+
                 if (it.isNotEmpty()) {
 
                     setSearchIconByState(stateIsSearch = true)

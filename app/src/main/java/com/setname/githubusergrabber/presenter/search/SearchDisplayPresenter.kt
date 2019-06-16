@@ -20,9 +20,6 @@ class SearchDisplayPresenter @Inject constructor() {
     lateinit var userMapper: UserMapper
 
     @Inject
-    lateinit var currentOpenedUser: User
-
-    @Inject
     lateinit var currentUser: User
 
     @Inject
@@ -39,8 +36,6 @@ class SearchDisplayPresenter @Inject constructor() {
 
     fun loadListOfUsersByLogin(login: String) {
 
-        view.showProgressBar()
-
         val dispatcher =
             retrofitDao.getUser(login)
                 .subscribeOn(Schedulers.io())
@@ -52,6 +47,7 @@ class SearchDisplayPresenter @Inject constructor() {
     private fun onModelResponseFetched(modelUserResponse: ModelUserResponse) {
 
         view.loadListOfUsers(userMapper.convertTo(modelUserResponse))
+        view.hideProgressBar()
 
     }
 

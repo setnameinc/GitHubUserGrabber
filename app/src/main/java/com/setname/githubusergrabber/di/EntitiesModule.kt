@@ -17,8 +17,4 @@ class EntitiesModule {
     @Singleton
     fun provideCurrentOpenedUser(): User = User()
 
-    @Provides
-    @Singleton
-    fun provideRepositoriesList(): MutableList<ModelRepositoryCache> = arrayListOf()
-
 }
