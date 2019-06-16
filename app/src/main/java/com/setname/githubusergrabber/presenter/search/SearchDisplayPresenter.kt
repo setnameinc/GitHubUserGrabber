@@ -6,7 +6,7 @@ import com.setname.githubusergrabber.entities.repository.ModelUserResponse
 import com.setname.githubusergrabber.entities.repository.User
 import com.setname.githubusergrabber.mappers.FavouriteMapper
 import com.setname.githubusergrabber.mappers.UserMapper
-import com.setname.githubusergrabber.ui.search.SearchDisplayFragment
+import com.setname.githubusergrabber.ui.search.SearchDisplayFragmentView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -28,9 +28,9 @@ class SearchDisplayPresenter @Inject constructor() {
     @Inject
     lateinit var favouriteMapper: FavouriteMapper
 
-    private lateinit var view: SearchDisplayFragment
+    private lateinit var view: SearchDisplayFragmentView
 
-    fun init(view: SearchDisplayFragment) {
+    fun init(view: SearchDisplayFragmentView) {
         this.view = view
     }
 

@@ -5,11 +5,12 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.widget.LinearLayoutManager
-import android.transition.Visibility
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.view.animation.LayoutAnimationController
 import android.widget.EditText
 import com.setname.githubusergrabber.App
 import com.setname.githubusergrabber.R
@@ -31,9 +32,8 @@ import ru.terrakok.cicerone.commands.Command
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
-import javax.inject.Singleton
 
-class SearchDisplayFragmentImpl : Fragment(), SearchDisplayFragment {
+class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
 
     @Inject
     lateinit var presenter: SearchDisplayPresenter
@@ -201,10 +201,14 @@ class SearchDisplayFragmentImpl : Fragment(), SearchDisplayFragment {
 
             })
 
+        val controller: LayoutAnimationController =
+            AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down)
+
         fragment_display_search_rv.apply {
 
-            adapter = this@SearchDisplayFragmentImpl.adapter
+            adapter = this@SearchDisplayFragment.adapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            layoutAnimation = controller
 
         }
 
@@ -246,7 +250,7 @@ interface AdapterDisplaySearchClickListener {
     fun navigateToFullUserInformation(pos: Int)
 }
 
-interface SearchDisplayFragment {
+interface SearchDisplayFragmentView {
     fun loadListOfUsers(list: List<User>)
     fun hideProgressBar()
     fun showErrorMessage(message: String)

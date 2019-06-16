@@ -7,7 +7,7 @@ import com.setname.githubusergrabber.entities.repository.ModelRepositoryReposito
 import com.setname.githubusergrabber.entities.repository.User
 import com.setname.githubusergrabber.mappers.FavouriteMapper
 import com.setname.githubusergrabber.mappers.RepositoryMapper
-import com.setname.githubusergrabber.ui.user.DisplayUserFragment
+import com.setname.githubusergrabber.ui.user.DisplayUserFragmentView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -26,12 +26,12 @@ class DisplayUserPresenter @Inject constructor() {
     @Inject
     lateinit var repositoryMapper: RepositoryMapper
 
-    private lateinit var view: DisplayUserFragment
+    private lateinit var view: DisplayUserFragmentView
 
     var listOfRepositoryRepositories: MutableList<ModelRepositoryCache> = arrayListOf()
 
-    fun init(displayUserFragment: DisplayUserFragment) {
-        view = displayUserFragment
+    fun init(displayUserFragmentView: DisplayUserFragmentView) {
+        view = displayUserFragmentView
     }
 
     fun checkIsFavouriteExists(id: Long): Boolean {

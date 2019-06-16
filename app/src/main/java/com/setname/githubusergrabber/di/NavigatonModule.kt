@@ -1,8 +1,6 @@
 package com.setname.githubusergrabber.di
 
 import com.setname.githubusergrabber.contants.Navigation
-import com.setname.githubusergrabber.ui.search.SearchDisplayFragment
-import com.setname.githubusergrabber.ui.search.SearchDisplayFragmentImpl
 import dagger.Module
 import dagger.Provides
 import ru.terrakok.cicerone.Cicerone

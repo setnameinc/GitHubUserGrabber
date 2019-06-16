@@ -18,7 +18,7 @@ import com.setname.githubusergrabber.presenter.user.DisplayUserPresenter
 import kotlinx.android.synthetic.main.fragment_display_user.*
 import javax.inject.Inject
 
-class DisplayUserFragmentImpl : Fragment(), DisplayUserFragment {
+class DisplayUserFragment : Fragment(), DisplayUserFragmentView {
 
     @Inject
     lateinit var presenter: DisplayUserPresenter
@@ -99,7 +99,7 @@ class DisplayUserFragmentImpl : Fragment(), DisplayUserFragment {
     private fun initRecyclerView() {
         fragment_display_user__rv.apply {
 
-            adapter = this@DisplayUserFragmentImpl.adapter
+            adapter = this@DisplayUserFragment.adapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
         }
@@ -149,7 +149,7 @@ class DisplayUserFragmentImpl : Fragment(), DisplayUserFragment {
 
 }
 
-interface DisplayUserFragment {
+interface DisplayUserFragmentView {
     fun displayRepositoryList(list: List<Repository>)
     fun showErrorMessage(message: String)
 }
