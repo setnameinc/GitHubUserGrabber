@@ -1,5 +1,6 @@
 package com.setname.githubusergrabber.ui.search
 
+import android.annotation.SuppressLint
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.net.NetworkInfo
 import android.os.Bundle
@@ -74,10 +75,6 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
         App.appComponent.inject(this)
     }
 
-    override fun initPresenter() {
-        presenter.init(this)
-    }
-
     override fun initNavigator() {
         navigator = object : SupportAppNavigator(activity, R.id.main_container) {
             override fun setupFragmentTransaction(
@@ -119,11 +116,16 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
 
     }
 
+    override fun initPresenter() {
+        presenter.init(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         initInjection()
         initNavigator()
         initNetworkListener()
+        initPresenter()
 
         super.onCreate(savedInstanceState)
     }
@@ -150,7 +152,6 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
 
         if (onViewCreated) {
 
-            initPresenter()
             initSearchListener()
             initRecyclerView()
 
@@ -162,6 +163,7 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
 
     }
 
+    @SuppressLint("CheckResult")
     override fun initSearchListener() {
 
         val rxSearchObservable = RxSearchObservable()
@@ -199,7 +201,7 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
             .subscribe {
                 if (it.isNotEmpty()) {
 
-                    presenter.loadListOfUsersByLogin(searchField.text.toString())
+                    presenter.loadListOfUsers()
 
                 } else {
 

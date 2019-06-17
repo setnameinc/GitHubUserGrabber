@@ -1,71 +1,41 @@
 package com.setname.githubusergrabber.presenter.search
 
-import com.setname.githubusergrabber.dao.DatabaseDao
-import com.setname.githubusergrabber.dao.RepositoryDao
-import com.setname.githubusergrabber.entities.repository.ModelUserResponse
+import com.setname.githubusergrabber.App
+import com.setname.githubusergrabber.domain.search.SearchInteractor
 import com.setname.githubusergrabber.entities.repository.User
-import com.setname.githubusergrabber.mappers.FavouriteMapper
-import com.setname.githubusergrabber.mappers.UserMapper
 import com.setname.githubusergrabber.ui.search.SearchDisplayFragmentView
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class SearchDisplayPresenter @Inject constructor() {
+class SearchDisplayPresenterImpl : SearchDisplayPresenter {
 
     @Inject
-    lateinit var retrofitDao: RepositoryDao
-
-    @Inject
-    lateinit var userMapper: UserMapper
+    lateinit var searchInteractor: SearchInteractor
 
     @Inject
     lateinit var currentUser: User
 
-    @Inject
-    lateinit var databaseDao: DatabaseDao
-
-    @Inject
-    lateinit var favouriteMapper: FavouriteMapper
-
     private lateinit var view: SearchDisplayFragmentView
 
-    fun init(view: SearchDisplayFragmentView) {
+    override fun init(view: SearchDisplayFragmentView) {
+
         this.view = view
-    }
-
-    fun loadListOfUsersByLogin(login: String) {
-
-        val dispatcher =
-            retrofitDao.getUser(login)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onModelResponseFetched, this::onError)
+        App.appComponent.inject(this)
+        searchInteractor.init(this)
 
     }
 
-    private fun onModelResponseFetched(modelUserResponse: ModelUserResponse) {
+    override fun loadListOfUsers() {
 
-        view.loadListOfUsers(userMapper.convertTo(modelUserResponse))
+        searchInteractor.loadListOfUsers(currentUser.login)
+
+    }
+
+    override fun loadList(list: List<User>) {
+        view.loadListOfUsers(list)
         view.hideProgressBar()
-
     }
 
-    private fun onError(throwable: Throwable) {
-
-        view.showErrorMessage(throwable.message!!)
-        view.hideProgressBar()
-
-    }
-
-    fun loadFavouriteUsers() {
-
-        view.loadListOfUsers(databaseDao.getAllFavourites().map { favouriteMapper.convertTo(it) })
-        view.hideProgressBar()
-
-    }
-
-    fun loadCurrentUser(user: User) {
+    override fun loadCurrentUser(user: User) {
 
         currentUser.login = user.login
         currentUser.avatar_url = user.avatar_url
@@ -73,5 +43,25 @@ class SearchDisplayPresenter @Inject constructor() {
         currentUser.id = user.id
 
     }
+
+    override fun onError(throwable: Throwable) {
+        view.showErrorMessage(throwable.message ?: "error")
+    }
+
+    override fun loadFavouriteUsers() {
+        searchInteractor.loadFavouriteUsers()
+    }
+
+}
+
+interface SearchDisplayPresenter {
+
+    fun init(view: SearchDisplayFragmentView)
+    fun loadListOfUsers()
+    fun loadList(list: List<User>)
+    fun loadCurrentUser(user: User)
+    fun loadFavouriteUsers()
+
+    fun onError(throwable: Throwable)
 
 }
