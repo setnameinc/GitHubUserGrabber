@@ -1,6 +1,5 @@
 package com.setname.githubusergrabber.ui.search
 
-import android.annotation.SuppressLint
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.net.NetworkInfo
 import android.os.Bundle
@@ -24,6 +23,10 @@ import com.setname.githubusergrabber.R
 import com.setname.githubusergrabber.adapters.SearchDisplayAdapter
 import com.setname.githubusergrabber.contants.Navigation
 import com.setname.githubusergrabber.entities.repository.User
+import com.setname.githubusergrabber.interfaces.BaseFragmentInteractions
+import com.setname.githubusergrabber.interfaces.NavigationInteractions
+import com.setname.githubusergrabber.interfaces.NetworkListenerInteractions
+import com.setname.githubusergrabber.interfaces.RecyclerViewInteractions
 import com.setname.githubusergrabber.navigation.Screens
 import com.setname.githubusergrabber.presenter.search.SearchDisplayPresenter
 import com.setname.githubusergrabber.rxutils.RxSearchObservable
@@ -67,19 +70,15 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
     private lateinit var progressBar: ProgressBar
     private lateinit var errorView: ImageView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-
-        initInjection()
-        initNavigator()
-
-        super.onCreate(savedInstanceState)
-    }
-
-    private fun initInjection() {
+    override fun initInjection() {
         App.appComponent.inject(this)
     }
 
-    private fun initNavigator() {
+    override fun initPresenter() {
+        presenter.init(this)
+    }
+
+    override fun initNavigator() {
         navigator = object : SupportAppNavigator(activity, R.id.main_container) {
             override fun setupFragmentTransaction(
                 command: Command?,
@@ -95,6 +94,38 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
                 )
             }
         }
+    }
+
+    override fun initNetworkListener() {
+
+        ReactiveNetwork.observeNetworkConnectivity(context?.applicationContext)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { connectivity ->
+                run {
+
+                    if (connectivity.state() == NetworkInfo.State.DISCONNECTED) {
+
+                        showErrorView("no internet connection")
+
+                    } else if (connectivity.state() == NetworkInfo.State.CONNECTED) {
+
+                        hideErrorView()
+
+                    }
+
+                }
+            }
+
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+
+        initInjection()
+        initNavigator()
+        initNetworkListener()
+
+        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -123,8 +154,6 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
             initSearchListener()
             initRecyclerView()
 
-            initNetworkListener()
-
             showFavouriteList()
 
             onViewCreated = false
@@ -133,54 +162,7 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
 
     }
 
-    @SuppressLint("CheckResult")
-    private fun initNetworkListener() {
-
-        ReactiveNetwork.observeNetworkConnectivity(context?.applicationContext)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { connectivity ->
-                run {
-
-                    if (connectivity.state() == NetworkInfo.State.DISCONNECTED) {
-
-                        showErrorView("no internet connection")
-
-                    } else if (connectivity.state() == NetworkInfo.State.CONNECTED) {
-
-                        hideErrorView()
-
-                    }
-
-                }
-            }
-
-    }
-
-    override fun loadListOfUsers(list: List<User>) {
-        this.list.clear()
-        this.list.addAll(list)
-        adapter.notifyDataSetChanged()
-    }
-
-    override fun showProgressBar() {
-        progressBar.visibility = View.VISIBLE
-    }
-
-    override fun hideProgressBar() {
-        progressBar.visibility = View.INVISIBLE
-    }
-
-    override fun showErrorMessage(message: String) {
-
-    }
-
-    private fun initPresenter() {
-        presenter.init(this)
-    }
-
-    @SuppressLint("CheckResult")
-    private fun initSearchListener() {
+    override fun initSearchListener() {
 
         val rxSearchObservable = RxSearchObservable()
 
@@ -197,11 +179,11 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
 
                     if (it.isNotEmpty()) {
 
-                        setSearchIconByState(stateIsSearch = true)
+                        initSearchIconByNetworkState(stateIsSearch = true)
 
                     } else {
 
-                        setSearchIconByState(stateIsSearch = false)
+                        initSearchIconByNetworkState(stateIsSearch = false)
 
                     }
 
@@ -229,7 +211,7 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
 
     }
 
-    private fun initRecyclerView() {
+    override fun initRecyclerView() {
 
         adapter = SearchDisplayAdapter(list,
             object : AdapterDisplaySearchClickListener {
@@ -256,7 +238,7 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
 
     }
 
-    private fun setSearchIconByState(stateIsSearch: Boolean) {
+    override fun initSearchIconByNetworkState(stateIsSearch: Boolean) {
 
         if (stateIsSearch) {
 
@@ -267,6 +249,20 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
             view_search_view__icon_search.setImageResource(R.drawable.ic_star_not_selected)
 
         }
+
+    }
+
+    override fun loadListOfUsers(list: List<User>) {
+        this.list.clear()
+        this.list.addAll(list)
+        adapter.notifyDataSetChanged()
+    }
+
+    override fun showProgressBar() {
+        progressBar.visibility = View.VISIBLE
+    }
+
+    override fun showErrorMessage(message: String) {
 
     }
 
@@ -283,6 +279,12 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
 
     }
 
+    override fun showFavouriteList() {
+
+        presenter.loadFavouriteUsers()
+
+    }
+
     override fun hideErrorView() {
 
         errorView.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_error_end))
@@ -294,10 +296,8 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
 
     }
 
-    private fun showFavouriteList() {
-
-        presenter.loadFavouriteUsers()
-
+    override fun hideProgressBar() {
+        progressBar.visibility = View.INVISIBLE
     }
 
     override fun onStart() {
@@ -316,11 +316,29 @@ interface AdapterDisplaySearchClickListener {
     fun navigateToFullUserInformation(pos: Int)
 }
 
-interface SearchDisplayFragmentView {
+interface SearchDisplayFragmentView : BaseFragmentInteractions,
+    NavigationInteractions,
+    RecyclerViewInteractions,
+    ErrorView,
+    NetworkListenerInteractions,
+    SearchListInteractions {
+
+    fun initSearchListener()
+    fun initSearchIconByNetworkState(stateIsSearch: Boolean)
+    fun showFavouriteList()
+
+}
+
+interface SearchListInteractions {
+
     fun loadListOfUsers(list: List<User>)
-    fun showErrorMessage(message: String)
+
+}
+
+interface ErrorView {
+
     fun showErrorView(message: String)
     fun hideErrorView()
-    fun showProgressBar()
-    fun hideProgressBar()
+
 }
+

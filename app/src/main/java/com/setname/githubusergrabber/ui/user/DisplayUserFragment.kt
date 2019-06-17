@@ -16,6 +16,8 @@ import com.setname.githubusergrabber.R
 import com.setname.githubusergrabber.adapters.RepositoryDisplayAdapter
 import com.setname.githubusergrabber.entities.cache.Repository
 import com.setname.githubusergrabber.entities.repository.User
+import com.setname.githubusergrabber.interfaces.BaseFragmentInteractions
+import com.setname.githubusergrabber.interfaces.RecyclerViewInteractions
 import com.setname.githubusergrabber.presenter.user.DisplayUserPresenter
 import kotlinx.android.synthetic.main.fragment_display_user.*
 import kotlinx.android.synthetic.main.fragment_display_user_header.*
@@ -33,7 +35,7 @@ class DisplayUserFragment : Fragment(), DisplayUserFragmentView {
     private val adapter = RepositoryDisplayAdapter(list)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        App.appComponent.inject(this)
+        initInjection()
         super.onCreate(savedInstanceState)
     }
 
@@ -51,17 +53,20 @@ class DisplayUserFragment : Fragment(), DisplayUserFragmentView {
         initUpperBlock(isFavouriteExist)
         initRecyclerView()
 
-
         loadUpperBlock()
         loadRepositoryList(isFavouriteExist)
 
     }
 
-    private fun initPresenter() {
+    override fun initInjection() {
+        App.appComponent.inject(this)
+    }
+
+    override fun initPresenter() {
         presenter.init(this)
     }
 
-    private fun initUpperBlock(isFavouriteExist: Boolean) {
+    override fun initUpperBlock(isFavouriteExist: Boolean) {
 
         val selected = ContextCompat.getDrawable(context!!, R.drawable.ic_star_not_select_to_selected)
         val notSelected = ContextCompat.getDrawable(context!!, R.drawable.ic_star_selected_to_not_selected)
@@ -100,7 +105,7 @@ class DisplayUserFragment : Fragment(), DisplayUserFragmentView {
 
     }
 
-    private fun initRecyclerView() {
+    override fun initRecyclerView() {
         fragment_display_user__rv.apply {
 
             adapter = this@DisplayUserFragment.adapter
@@ -109,7 +114,7 @@ class DisplayUserFragment : Fragment(), DisplayUserFragmentView {
         }
     }
 
-    private fun loadUpperBlock() {
+    override fun loadUpperBlock() {
 
         fun loadImage(url: String) {
             Glide.with(context!!)
@@ -127,7 +132,7 @@ class DisplayUserFragment : Fragment(), DisplayUserFragmentView {
 
     }
 
-    private fun loadRepositoryList(isFavouriteExist: Boolean) {
+    override fun loadRepositoryList(isFavouriteExist: Boolean) {
 
         if (isFavouriteExist) {
 
@@ -150,13 +155,30 @@ class DisplayUserFragment : Fragment(), DisplayUserFragmentView {
     override fun showErrorMessage(message: String) {
 
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-        //Or later init     
+        //Or later init
+
+    }
+
+    override fun showProgressBar() {
+
+    }
+
+    override fun hideProgressBar() {
 
     }
 
 }
 
-interface DisplayUserFragmentView {
+interface DisplayUserFragmentView : BaseFragmentInteractions, RecyclerViewInteractions, RepositoryListInteractions {
+
+    fun initUpperBlock(isFavouriteExist: Boolean)
+    fun loadUpperBlock()
+    fun loadRepositoryList(isFavouriteExist: Boolean)
+
+}
+
+interface RepositoryListInteractions{
+
     fun displayRepositoryList(list: List<Repository>)
-    fun showErrorMessage(message: String)
+
 }
