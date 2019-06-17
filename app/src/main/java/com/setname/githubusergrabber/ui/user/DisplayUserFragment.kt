@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.setname.githubusergrabber.App
@@ -17,6 +18,7 @@ import com.setname.githubusergrabber.entities.cache.Repository
 import com.setname.githubusergrabber.entities.repository.User
 import com.setname.githubusergrabber.presenter.user.DisplayUserPresenter
 import kotlinx.android.synthetic.main.fragment_display_user.*
+import kotlinx.android.synthetic.main.fragment_display_user_header.*
 import javax.inject.Inject
 
 class DisplayUserFragment : Fragment(), DisplayUserFragmentView {
@@ -66,33 +68,33 @@ class DisplayUserFragment : Fragment(), DisplayUserFragmentView {
 
         if (isFavouriteExist) {
 
-            fragment_display_user__btn_favourite.setImageDrawable(selected)
+            fragment_display_user_header__btn_favourite.setImageDrawable(selected)
 
         } else {
 
-            fragment_display_user__btn_favourite.setImageDrawable(notSelected)
+            //drawable using by default
 
         }
 
-        fragment_display_user__btn_favourite.setOnClickListener {
+        fragment_display_user_header__btn_favourite.setOnClickListener {
 
-            fragment_display_user__btn_favourite.isClickable = false
+            fragment_display_user_header__btn_favourite.isClickable = false
 
-            if (fragment_display_user__btn_favourite.drawable == selected) {
+            if (fragment_display_user_header__btn_favourite.drawable == selected) {
 
                 presenter.removeFavourite(currentUser)
-                fragment_display_user__btn_favourite.setImageDrawable(notSelected)
+                fragment_display_user_header__btn_favourite.setImageDrawable(notSelected)
 
             } else {
 
                 presenter.addFavourite(currentUser)
-                fragment_display_user__btn_favourite.setImageDrawable(selected)
+                fragment_display_user_header__btn_favourite.setImageDrawable(selected)
 
             }
 
-            ((fragment_display_user__btn_favourite.drawable) as AnimatedVectorDrawable).start()
+            ((fragment_display_user_header__btn_favourite.drawable) as AnimatedVectorDrawable).start()
 
-            fragment_display_user__btn_favourite.isClickable = true
+            fragment_display_user_header__btn_favourite.isClickable = true
 
         }
 
@@ -113,11 +115,11 @@ class DisplayUserFragment : Fragment(), DisplayUserFragmentView {
             Glide.with(context!!)
                 .load(url)
                 .apply(RequestOptions.circleCropTransform())
-                .into(fragment_display_user__iv_user)
+                .into(fragment_display_user_header__iv_user)
         }
 
         fun loadUsername(name: String) {
-            fragment_display_user__tv_username.text = name
+            fragment_display_user_header__tv_username.text = name
         }
 
         loadImage(currentUser.avatar_url)
@@ -146,6 +148,9 @@ class DisplayUserFragment : Fragment(), DisplayUserFragmentView {
     }
 
     override fun showErrorMessage(message: String) {
+
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+        //Or later init     
 
     }
 

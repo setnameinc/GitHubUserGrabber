@@ -212,7 +212,6 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
         rxSearchObservable
             .fromView(searchField)
             .debounce(1200, TimeUnit.MILLISECONDS)
-            .distinctUntilChanged()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
