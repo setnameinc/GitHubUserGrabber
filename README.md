@@ -1,5 +1,5 @@
 
-**Main libraries**: Dagger 2, Cicerone, Retrofit2, Room
+**Main libraries**: Dagger 2, Cicerone, Retrofit2, Room, RxJava2
 
 **Additional libraries**: Glide, ReactiveNetwork
 
