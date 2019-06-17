@@ -3,7 +3,7 @@
 
 **Additional libraries**: Glide, ReactiveNetwork
 
-**Trying to use this architecture**:
+**Trying to use VIPER**:
 
   - Version 0.0.1: Without domain layer
 
