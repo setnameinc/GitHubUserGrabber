@@ -1,5 +1,6 @@
 package com.setname.githubusergrabber.di
 
+import com.setname.githubusergrabber.domain.search.SearchInteractorImpl
 import com.setname.githubusergrabber.presenter.search.SearchDisplayPresenter
 import com.setname.githubusergrabber.presenter.search.SearchDisplayPresenterImpl
 import com.setname.githubusergrabber.ui.main.MainActivity
@@ -16,5 +17,6 @@ interface AppComponent {
     fun inject(searchDisplayFragmentImpl: SearchDisplayFragment)
     fun inject(displayUserFragmentImpl: DisplayUserFragment)
     fun inject(searchDisplayPresenter: SearchDisplayPresenterImpl)
+    fun inject(searchInteractor: SearchInteractorImpl)
 
 }

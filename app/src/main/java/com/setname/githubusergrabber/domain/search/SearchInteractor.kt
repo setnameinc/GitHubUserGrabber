@@ -1,5 +1,6 @@
 package com.setname.githubusergrabber.domain.search
 
+import com.setname.githubusergrabber.App
 import com.setname.githubusergrabber.dao.DatabaseDao
 import com.setname.githubusergrabber.dao.RepositoryDao
 import com.setname.githubusergrabber.entities.repository.ModelUserResponse
@@ -11,12 +12,6 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class SearchInteractorImpl : SearchInteractor{
-
-    private lateinit var searchDisplayPresenter: SearchDisplayPresenter
-
-    override fun init(searchDisplayPresenter: SearchDisplayPresenter) {
-        this.searchDisplayPresenter = searchDisplayPresenter
-    }
 
     @Inject
     lateinit var retrofitDao: RepositoryDao
@@ -30,12 +25,19 @@ class SearchInteractorImpl : SearchInteractor{
     @Inject
     lateinit var favouriteMapper: FavouriteMapper
 
+    private lateinit var searchDisplayPresenter: SearchDisplayPresenter
+
     override fun loadListOfUsers(login:String) {
         val dispatcher =
             retrofitDao.getUser(login)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::onModelResponseFetched, this::onError)
+    }
+
+    override fun init(searchDisplayPresenter: SearchDisplayPresenter) {
+        App.appComponent.inject(this)
+        this.searchDisplayPresenter = searchDisplayPresenter
     }
 
     override fun loadFavouriteUsers() {

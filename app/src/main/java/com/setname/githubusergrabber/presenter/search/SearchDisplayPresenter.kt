@@ -37,6 +37,8 @@ class SearchDisplayPresenterImpl : SearchDisplayPresenter {
 
     override fun loadCurrentUser(user: User) {
 
+        //doesn't use mappings, because the mapping create a new instance, but need just to update the data in the existing model
+
         currentUser.login = user.login
         currentUser.avatar_url = user.avatar_url
         currentUser.repos_url = user.repos_url
