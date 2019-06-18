@@ -1,4 +1,4 @@
-package com.setname.githubusergrabber.contants
+package com.setname.githubusergrabber.constants
 
 object RemoteModuleUtils{
     const val baseUrl = "https://api.github.com"

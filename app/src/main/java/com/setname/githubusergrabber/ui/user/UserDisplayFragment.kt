@@ -18,7 +18,8 @@ import com.setname.githubusergrabber.entities.cache.Repository
 import com.setname.githubusergrabber.entities.repository.User
 import com.setname.githubusergrabber.interfaces.BaseFragmentInteractions
 import com.setname.githubusergrabber.interfaces.RecyclerViewInteractions
-import com.setname.githubusergrabber.presenter.user.DisplayUserPresenter
+import com.setname.githubusergrabber.presenter.user.IUserPresenter
+import com.setname.githubusergrabber.presenter.user.UserPresenter
 import kotlinx.android.synthetic.main.fragment_display_user.*
 import kotlinx.android.synthetic.main.fragment_display_user_header.*
 import javax.inject.Inject
@@ -26,7 +27,7 @@ import javax.inject.Inject
 class DisplayUserFragment : Fragment(), DisplayUserFragmentView {
 
     @Inject
-    lateinit var presenter: DisplayUserPresenter
+    lateinit var presenter: IUserPresenter
 
     @Inject
     lateinit var currentUser: User
@@ -48,7 +49,7 @@ class DisplayUserFragment : Fragment(), DisplayUserFragmentView {
 
         initPresenter()
 
-        val isFavouriteExist = presenter.checkIsFavouriteExists(currentUser.id)
+        val isFavouriteExist = presenter.checkIsFavouriteExist(currentUser.id)
 
         initUpperBlock(isFavouriteExist)
         initRecyclerView()
@@ -140,7 +141,7 @@ class DisplayUserFragment : Fragment(), DisplayUserFragmentView {
 
         } else {
 
-            presenter.loadRepositoryListFromRepository(currentUser)
+            presenter.loadRepositoryListFromRemote(currentUser)
 
         }
 

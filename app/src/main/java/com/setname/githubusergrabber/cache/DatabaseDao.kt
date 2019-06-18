@@ -1,4 +1,4 @@
-package com.setname.githubusergrabber.dao
+package com.setname.githubusergrabber.cache
 
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert

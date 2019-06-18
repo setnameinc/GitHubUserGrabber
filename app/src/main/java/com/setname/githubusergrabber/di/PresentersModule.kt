@@ -1,16 +1,22 @@
 package com.setname.githubusergrabber.di
 
-import com.setname.githubusergrabber.presenter.search.SearchDisplayPresenter
-import com.setname.githubusergrabber.presenter.search.SearchDisplayPresenterImpl
+import com.setname.githubusergrabber.presenter.search.ISearchPresenter
+import com.setname.githubusergrabber.presenter.search.SearchPresenter
+import com.setname.githubusergrabber.presenter.user.IUserPresenter
+import com.setname.githubusergrabber.presenter.user.UserPresenter
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class PresentersModule{
+class PresentersModule {
 
     @Provides
     @Singleton
-    fun provideSearchDisplayModule(): SearchDisplayPresenter = SearchDisplayPresenterImpl()
+    fun provideSearchDisplayModule(): ISearchPresenter = SearchPresenter()
+
+    @Provides
+    @Singleton
+    fun provideUserInteractor(): IUserPresenter = UserPresenter()
 
 }

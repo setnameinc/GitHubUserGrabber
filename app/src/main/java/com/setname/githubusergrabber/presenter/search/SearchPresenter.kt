@@ -1,15 +1,15 @@
 package com.setname.githubusergrabber.presenter.search
 
 import com.setname.githubusergrabber.App
-import com.setname.githubusergrabber.domain.search.SearchInteractor
+import com.setname.githubusergrabber.domain.interactors.search.ISearchInteractor
 import com.setname.githubusergrabber.entities.repository.User
 import com.setname.githubusergrabber.ui.search.SearchDisplayFragmentView
 import javax.inject.Inject
 
-class SearchDisplayPresenterImpl : SearchDisplayPresenter {
+class SearchPresenter : ISearchPresenter {
 
     @Inject
-    lateinit var searchInteractor: SearchInteractor
+    lateinit var iSearchInteractor: ISearchInteractor
 
     @Inject
     lateinit var currentUser: User
@@ -20,13 +20,13 @@ class SearchDisplayPresenterImpl : SearchDisplayPresenter {
 
         this.view = view
         App.appComponent.inject(this)
-        searchInteractor.init(this)
+        iSearchInteractor.init(this)
 
     }
 
-    override fun loadListOfUsers() {
+    override fun loadListOfUsers(login: String) {
 
-        searchInteractor.loadListOfUsers(currentUser.login)
+        iSearchInteractor.loadListOfUsers(login)
 
     }
 
@@ -51,15 +51,15 @@ class SearchDisplayPresenterImpl : SearchDisplayPresenter {
     }
 
     override fun loadFavouriteUsers() {
-        searchInteractor.loadFavouriteUsers()
+        iSearchInteractor.loadFavouriteUsers()
     }
 
 }
 
-interface SearchDisplayPresenter {
+interface ISearchPresenter {
 
     fun init(view: SearchDisplayFragmentView)
-    fun loadListOfUsers()
+    fun loadListOfUsers(login: String)
     fun loadList(list: List<User>)
     fun loadCurrentUser(user: User)
     fun loadFavouriteUsers()

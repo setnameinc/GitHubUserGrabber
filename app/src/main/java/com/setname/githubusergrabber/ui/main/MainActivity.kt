@@ -1,18 +1,15 @@
 package com.setname.githubusergrabber.ui.main
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AppCompatActivity
 import com.setname.githubusergrabber.App
 import com.setname.githubusergrabber.R
-import com.setname.githubusergrabber.contants.Navigation
+import com.setname.githubusergrabber.constants.Navigation
 import com.setname.githubusergrabber.navigation.Screens
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
-import ru.terrakok.cicerone.commands.Command
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -56,7 +53,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun changeScreen() {
-        router.newRootScreen(Screens.SearchDisplayFragmentScreen())
+        router.newChain(Screens.SearchDisplayFragmentScreen())
     }
 
     override fun onPause() {

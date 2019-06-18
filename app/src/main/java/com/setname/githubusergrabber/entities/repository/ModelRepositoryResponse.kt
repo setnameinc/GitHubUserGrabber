@@ -1,6 +1,6 @@
 package com.setname.githubusergrabber.entities.repository
 
-data class ModelRepositoryRepository(
+data class ModelRepositoryRemote(
     val id: Long,
     val name: String,
     val description: String?,

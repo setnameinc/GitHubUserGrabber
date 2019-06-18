@@ -2,7 +2,7 @@ package com.setname.githubusergrabber.di
 
 import android.arch.persistence.room.Room
 import android.content.Context
-import com.setname.githubusergrabber.cache.Database
+import com.setname.githubusergrabber.cache.database.Database
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

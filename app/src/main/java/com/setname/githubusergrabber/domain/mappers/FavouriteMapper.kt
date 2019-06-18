@@ -1,4 +1,4 @@
-package com.setname.githubusergrabber.mappers
+package com.setname.githubusergrabber.domain.mappers
 
 import com.setname.githubusergrabber.entities.cache.ModelFavourite
 import com.setname.githubusergrabber.entities.cache.ModelUserDatabase

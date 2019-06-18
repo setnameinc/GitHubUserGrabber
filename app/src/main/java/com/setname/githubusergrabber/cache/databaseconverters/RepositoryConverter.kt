@@ -1,4 +1,4 @@
-package com.setname.githubusergrabber.databaseconverters
+package com.setname.githubusergrabber.cache.databaseconverters
 
 import android.arch.persistence.room.TypeConverter
 import com.google.gson.Gson

@@ -1,10 +1,9 @@
-package com.setname.githubusergrabber.databaseconverters
+package com.setname.githubusergrabber.cache.databaseconverters
 
 import android.arch.persistence.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.setname.githubusergrabber.entities.cache.ModelUserDatabase
-import com.setname.githubusergrabber.entities.repository.User
 
 class UserConverter {
 

@@ -1,6 +1,6 @@
 package com.setname.githubusergrabber.di
 
-import com.setname.githubusergrabber.mappers.*
+import com.setname.githubusergrabber.domain.mappers.*
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

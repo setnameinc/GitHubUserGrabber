@@ -1,6 +1,6 @@
 package com.setname.githubusergrabber.di
 
-import com.setname.githubusergrabber.contants.Navigation
+import com.setname.githubusergrabber.constants.Navigation
 import dagger.Module
 import dagger.Provides
 import ru.terrakok.cicerone.Cicerone

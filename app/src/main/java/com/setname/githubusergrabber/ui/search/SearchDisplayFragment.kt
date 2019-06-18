@@ -22,14 +22,14 @@ import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import com.setname.githubusergrabber.App
 import com.setname.githubusergrabber.R
 import com.setname.githubusergrabber.adapters.SearchDisplayAdapter
-import com.setname.githubusergrabber.contants.Navigation
+import com.setname.githubusergrabber.constants.Navigation
 import com.setname.githubusergrabber.entities.repository.User
 import com.setname.githubusergrabber.interfaces.BaseFragmentInteractions
 import com.setname.githubusergrabber.interfaces.NavigationInteractions
 import com.setname.githubusergrabber.interfaces.NetworkListenerInteractions
 import com.setname.githubusergrabber.interfaces.RecyclerViewInteractions
 import com.setname.githubusergrabber.navigation.Screens
-import com.setname.githubusergrabber.presenter.search.SearchDisplayPresenter
+import com.setname.githubusergrabber.presenter.search.ISearchPresenter
 import com.setname.githubusergrabber.rxutils.RxSearchObservable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -47,7 +47,7 @@ import javax.inject.Named
 class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
 
     @Inject
-    lateinit var presenter: SearchDisplayPresenter
+    lateinit var presenterI: ISearchPresenter
 
     @Inject
     @field:Named(Navigation.ROUTER_SECOND_LEVEL)
@@ -93,6 +93,7 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
         }
     }
 
+    @SuppressLint("CheckResult")
     override fun initNetworkListener() {
 
         ReactiveNetwork.observeNetworkConnectivity(context?.applicationContext)
@@ -117,7 +118,7 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
     }
 
     override fun initPresenter() {
-        presenter.init(this)
+        presenterI.init(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -201,11 +202,11 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
             .subscribe {
                 if (it.isNotEmpty()) {
 
-                    presenter.loadListOfUsers()
+                    presenterI.loadListOfUsers(searchField.text.toString())
 
                 } else {
 
-                    presenter.loadFavouriteUsers()
+                    presenterI.loadFavouriteUsers()
 
                 }
             }
@@ -220,7 +221,7 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
 
                 override fun navigateToFullUserInformation(pos: Int) {
 
-                    presenter.loadCurrentUser(list[pos])
+                    presenterI.loadCurrentUser(list[pos])
                     router.navigateTo(Screens.DisplayUserFragmentScreen())
 
                 }
@@ -283,7 +284,7 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
 
     override fun showFavouriteList() {
 
-        presenter.loadFavouriteUsers()
+        presenterI.loadFavouriteUsers()
 
     }
 
