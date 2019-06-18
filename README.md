@@ -3,9 +3,7 @@
 
 **Additional libraries**: Glide, ReactiveNetwork
 
-**Trying to use VIPER**:
-
-  - Version 0.0.1: Without domain layer
+**Trying to use VIPER**
 
 ![image](https://github.com/setnameinc/GitHubUserGrabber/blob/master/DPUPUmR.jpg?raw=true)
 
