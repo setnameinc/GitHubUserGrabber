@@ -4,6 +4,7 @@ import android.app.Application
 import com.setname.githubusergrabber.di.AppComponent
 import com.setname.githubusergrabber.di.CacheModule
 import com.setname.githubusergrabber.di.DaggerAppComponent
+import com.setname.githubusergrabber.di.RemoteModule
 
 class App : Application() {
 
@@ -13,6 +14,7 @@ class App : Application() {
         appComponent = DaggerAppComponent
             .builder()
             .cacheModule(CacheModule(applicationContext))
+            .remoteModule(RemoteModule(applicationContext))
             .build()
 
     }

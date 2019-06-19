@@ -11,10 +11,6 @@ class EntitiesModule {
 
     @Provides
     @Singleton
-    fun provideUserList(): MutableList<User> = arrayListOf()
-
-    @Provides
-    @Singleton
     fun provideCurrentOpenedUser(): User = User()
 
 }

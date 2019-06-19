@@ -26,6 +26,8 @@ import javax.inject.Inject
 
 class DisplayUserFragment : Fragment(), DisplayUserFragmentView {
 
+    private val LAYOUT = R.layout.fragment_display_user
+
     @Inject
     lateinit var presenter: IUserPresenter
 
@@ -41,7 +43,7 @@ class DisplayUserFragment : Fragment(), DisplayUserFragmentView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_display_user, container, false)
+        return inflater.inflate(LAYOUT, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

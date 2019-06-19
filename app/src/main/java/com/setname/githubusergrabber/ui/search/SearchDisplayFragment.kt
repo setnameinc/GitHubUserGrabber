@@ -18,6 +18,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
+import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import com.setname.githubusergrabber.App
 import com.setname.githubusergrabber.R
@@ -45,6 +46,10 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
+
+    private val LAYOUT = R.layout.fragment_display_search
+
+    private val CONTAINER_ID = R.id.main_container
 
     @Inject
     lateinit var presenterI: ISearchPresenter
@@ -76,7 +81,7 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
     }
 
     override fun initNavigator() {
-        navigator = object : SupportAppNavigator(activity, R.id.main_container) {
+        navigator = object : SupportAppNavigator(activity, CONTAINER_ID) {
             override fun setupFragmentTransaction(
                 command: Command?,
                 currentFragment: Fragment?,
@@ -93,27 +98,9 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
         }
     }
 
-    @SuppressLint("CheckResult")
     override fun initNetworkListener() {
 
-        ReactiveNetwork.observeNetworkConnectivity(context?.applicationContext)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { connectivity ->
-                run {
-
-                    if (connectivity.state() == NetworkInfo.State.DISCONNECTED) {
-
-                        showErrorView("no internet connection")
-
-                    } else if (connectivity.state() == NetworkInfo.State.CONNECTED) {
-
-                        hideErrorView()
-
-                    }
-
-                }
-            }
+        presenterI.initNetworkListener()
 
     }
 
@@ -125,7 +112,6 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
 
         initInjection()
         initNavigator()
-        initNetworkListener()
         initPresenter()
 
         super.onCreate(savedInstanceState)
@@ -134,7 +120,7 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         if (onCreateView) {
-            localeView = inflater.inflate(R.layout.fragment_display_search, container, false)
+            localeView = inflater.inflate(LAYOUT, container, false)
 
             searchField = localeView.findViewById(R.id.view_search_view__et_search)
             progressBar = localeView.findViewById(R.id.view_search_view__pb)
@@ -152,6 +138,8 @@ class SearchDisplayFragment : Fragment(), SearchDisplayFragmentView {
         super.onViewCreated(view, savedInstanceState)
 
         if (onViewCreated) {
+
+            initNetworkListener()
 
             initSearchListener()
             initRecyclerView()

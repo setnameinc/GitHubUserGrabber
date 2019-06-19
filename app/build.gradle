@@ -61,9 +61,10 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
 
     //Room
-    implementation 'android.arch.persistence.room:runtime:1.1.1'
-    implementation 'android.arch.persistence.room:rxjava2:1.1.1'
-    kapt 'android.arch.persistence.room:compiler:1.1.1'
+    String roomVersion = '1.1.1'
+    implementation "android.arch.persistence.room:runtime:$roomVersion"
+    implementation "android.arch.persistence.room:rxjava2:$roomVersion"
+    kapt "android.arch.persistence.room:compiler:$roomVersion"
 
     //Cicerone
     implementation 'ru.terrakok.cicerone:cicerone:4.0.2'
@@ -74,6 +75,8 @@ dependencies {
     //Internet connection listener
     implementation 'com.github.pwittchen:reactivenetwork-rx2:3.0.3'
 
-
+    //Moxy
+    kapt 'com.arello-mobile:moxy-compiler:1.5.5'
+    implementation 'tech.schoolhelper:moxy-x-androidx:1.7.0'
 
 }

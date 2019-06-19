@@ -16,6 +16,9 @@ import javax.inject.Named
 
 class MainActivity : AppCompatActivity() {
 
+    private val LAYOUT = R.layout.activity_main
+    private val CONTAINER_ID = R.id.main_container
+
     @Inject
     @field:Named(Navigation.ROUTER_FIRST_LEVEL)
     lateinit var router: Router
@@ -32,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         initInjection()
         initNavigator()
 
-        setContentView(R.layout.activity_main)
+        setContentView(LAYOUT)
 
     }
 
@@ -41,7 +44,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initNavigator() {
-        navigator = SupportAppNavigator(this, R.id.main_container)
+        navigator = SupportAppNavigator(this, CONTAINER_ID)
     }
 
     override fun onStart() {
