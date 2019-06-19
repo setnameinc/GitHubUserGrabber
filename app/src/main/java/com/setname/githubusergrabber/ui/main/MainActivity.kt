@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun changeScreen() {
-        router.newChain(Screens.SearchDisplayFragmentScreen())
+        router.newRootScreen(Screens.SearchDisplayFragmentScreen())
     }
 
     override fun onPause() {
