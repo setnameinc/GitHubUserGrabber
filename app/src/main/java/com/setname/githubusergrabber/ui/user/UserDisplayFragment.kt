@@ -174,6 +174,10 @@ class DisplayUserFragment : Fragment(), DisplayUserFragmentView {
 
 interface DisplayUserFragmentView : BaseFragmentInteractions, RecyclerViewInteractions, RepositoryListInteractions {
 
+    fun showErrorMessage(message: String)
+    fun showProgressBar()
+    fun hideProgressBar()
+
     fun initUpperBlock(isFavouriteExist: Boolean)
     fun loadUpperBlock()
     fun loadRepositoryList(isFavouriteExist: Boolean)

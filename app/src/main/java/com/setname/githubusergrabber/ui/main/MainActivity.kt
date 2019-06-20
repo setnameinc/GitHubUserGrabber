@@ -2,6 +2,8 @@ package com.setname.githubusergrabber.ui.main
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
+import com.arellomobile.mvp.MvpAppCompatActivity
 import com.setname.githubusergrabber.App
 import com.setname.githubusergrabber.R
 import com.setname.githubusergrabber.constants.Navigation
@@ -14,7 +16,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : MvpAppCompatActivity() {
 
     private val LAYOUT = R.layout.activity_main
     private val CONTAINER_ID = R.id.main_container
@@ -35,6 +37,10 @@ class MainActivity : AppCompatActivity() {
         initInjection()
         initNavigator()
 
+        navigatorHolder.setNavigator(navigator)
+
+        changeScreen()
+
         setContentView(LAYOUT)
 
     }
@@ -47,21 +53,13 @@ class MainActivity : AppCompatActivity() {
         navigator = SupportAppNavigator(this, CONTAINER_ID)
     }
 
-    override fun onStart() {
-        super.onStart()
-        navigatorHolder.setNavigator(navigator)
-
-        changeScreen()
-
-    }
-
     private fun changeScreen() {
         router.newRootScreen(Screens.SearchDisplayFragmentScreen())
     }
 
-    override fun onPause() {
+    override fun onDestroy() {
         navigatorHolder.removeNavigator()
-        super.onPause()
+        super.onDestroy()
     }
 
 

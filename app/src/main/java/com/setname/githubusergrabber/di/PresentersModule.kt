@@ -11,9 +11,9 @@ import javax.inject.Singleton
 @Module
 class PresentersModule {
 
-    @Provides
+    /*@Provides
     @Singleton
-    fun provideSearchDisplayModule(): ISearchPresenter = SearchPresenter()
+    fun provideSearchDisplayModule(): ISearchPresenter = SearchPresenter()*/
 
     @Provides
     @Singleton

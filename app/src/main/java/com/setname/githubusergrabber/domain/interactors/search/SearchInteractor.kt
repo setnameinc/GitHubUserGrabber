@@ -8,10 +8,13 @@ import com.setname.githubusergrabber.entities.repository.ModelUserResponse
 import com.setname.githubusergrabber.presenter.search.ISearchPresenter
 import com.setname.githubusergrabber.remote.RemoteDao
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class SearchInteractor : ISearchInteractor {
+
+    private val disposableBag: CompositeDisposable = CompositeDisposable()
 
     @Inject
     lateinit var retrofitDao: RemoteDao
@@ -58,6 +61,12 @@ class SearchInteractor : ISearchInteractor {
 
     }
 
+    override fun clearDisposableBag() {
+
+        disposableBag.clear()
+
+    }
+
 }
 
 interface ISearchInteractor : SearchRemoteResponse {
@@ -67,6 +76,8 @@ interface ISearchInteractor : SearchRemoteResponse {
     fun loadListOfUsers(login: String)
 
     fun loadFavouriteUsers()
+
+    fun clearDisposableBag()
 
 }
 

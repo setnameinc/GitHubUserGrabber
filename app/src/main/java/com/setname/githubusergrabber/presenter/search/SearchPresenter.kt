@@ -2,16 +2,23 @@ package com.setname.githubusergrabber.presenter.search
 
 import android.annotation.SuppressLint
 import android.net.NetworkInfo
+import com.arellomobile.mvp.InjectViewState
+import com.arellomobile.mvp.MvpPresenter
 import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity
 import com.setname.githubusergrabber.App
 import com.setname.githubusergrabber.domain.interactors.search.ISearchInteractor
 import com.setname.githubusergrabber.entities.repository.User
+import com.setname.githubusergrabber.ui.search.ISearchDisplayFragment
 import com.setname.githubusergrabber.ui.search.SearchDisplayFragmentView
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class SearchPresenter : ISearchPresenter {
+@InjectViewState
+class SearchPresenter : MvpPresenter<SearchDisplayFragmentView>() , ISearchPresenter {
+
+    private val disposableBag: CompositeDisposable = CompositeDisposable()
 
     @Inject
     lateinit var iSearchInteractor: ISearchInteractor
@@ -22,11 +29,10 @@ class SearchPresenter : ISearchPresenter {
     @Inject
     lateinit var networkListener: io.reactivex.Observable<Connectivity>
 
-    private lateinit var view: SearchDisplayFragmentView
+    private lateinit var view: ISearchDisplayFragment
 
-    override fun init(view: SearchDisplayFragmentView) {
+    init {
 
-        this.view = view
         App.appComponent.inject(this)
         iSearchInteractor.init(this)
 
@@ -39,8 +45,8 @@ class SearchPresenter : ISearchPresenter {
     }
 
     override fun loadList(list: List<User>) {
-        view.loadListOfUsers(list)
-        view.hideProgressBar()
+        viewState.startShowFavouriteList(list)
+        viewState.showSuccess()
     }
 
     override fun loadCurrentUser(user: User) {
@@ -55,41 +61,46 @@ class SearchPresenter : ISearchPresenter {
     }
 
     override fun onError(throwable: Throwable) {
-        view.showErrorMessage(throwable.message ?: "error")
+        viewState.showErrorMessage(throwable.message ?: "error")
     }
 
     override fun loadFavouriteUsers() {
         iSearchInteractor.loadFavouriteUsers()
     }
 
-    @SuppressLint("CheckResult")
     override fun initNetworkListener() {
 
-        networkListener.subscribeOn(Schedulers.io())
+        val disposableNetworkState = networkListener.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { connectivity ->
                 run {
 
                     if (connectivity.state() == NetworkInfo.State.DISCONNECTED) {
 
-                        view.showErrorView("no internet connection")
+                        viewState.showErrorView("no internet connection")
 
                     } else if (connectivity.state() == NetworkInfo.State.CONNECTED) {
 
-                        view.hideErrorView()
+                        viewState.hideErrorView()
 
                     }
 
                 }
             }
 
+        disposableBag.add(disposableNetworkState)
+
+    }
+
+    override fun clearDisposableBag() {
+        iSearchInteractor.clearDisposableBag()
+        disposableBag.clear()
     }
 
 }
 
 interface ISearchPresenter {
 
-    fun init(view: SearchDisplayFragmentView)
     fun initNetworkListener()
 
     fun loadListOfUsers(login: String)
@@ -98,5 +109,6 @@ interface ISearchPresenter {
     fun loadFavouriteUsers()
 
     fun onError(throwable: Throwable)
+    fun clearDisposableBag()
 
 }
