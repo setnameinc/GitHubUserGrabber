@@ -3,10 +3,6 @@
 
 **Additional libraries**: Glide, ReactiveNetwork
 
-**Trying to use VIPER**
-
-![image](https://github.com/setnameinc/GitHubUserGrabber/blob/master/DPUPUmR.jpg?raw=true)
-
 **UI features**:
 
 * **There are two modes**:
